@@ -1,6 +1,6 @@
 services:
-  postgres:
-    image: postgres
+  task_postgres:
+    image: postgres:16.2
     container_name: postgres
     environment:
       POSTGRES_USER: task_db
