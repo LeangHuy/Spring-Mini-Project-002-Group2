@@ -48,6 +48,7 @@ subprojects {
             implementation 'io.micrometer:micrometer-tracing-bridge-brave'
             implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
             implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+            implementation 'org.springframework.boot:spring-boot-starter-validation'
         }
         if (!project.name.contains("eureka-server") && !project.name.contains("config-server") && !project.name.contains("api-gateway") && !project.name.contains("keycloak-admin-client")){
             implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -55,8 +56,9 @@ subprojects {
         }
         if(project.name.contains("api-gateway")){
             implementation 'org.springframework.boot:spring-boot-starter-webflux'
-            implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui'
+            implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
             implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+            implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         }
         if (project.name.contains("eureka-server")){
             implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
@@ -69,7 +71,6 @@ subprojects {
             implementation 'org.keycloak:keycloak-spring-boot-starter'
             implementation 'org.keycloak:keycloak-admin-client'
         }
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }

@@ -1,4 +1,4 @@
-package com.config;
+package com.config.miniproject2;
 
 public class Main {
     public static void main(String[] args) {
