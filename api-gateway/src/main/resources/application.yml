@@ -1,5 +1,11 @@
+server:
+  port: 8081
 spring:
   application:
     name: api-gateway
-server:
-  port: 8081
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
