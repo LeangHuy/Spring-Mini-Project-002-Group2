@@ -1,0 +1,22 @@
+services:
+  task_postgres:
+    image: postgres:16.2
+    container_name: postgres
+    environment:
+      POSTGRES_USER: task_db
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: task_db
+    ports:
+      - 5435:5432
+    volumes:
+      - task_data:/var/lib/postgresql/data
+
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9411:9411
+
+volumes:
+  task_data:

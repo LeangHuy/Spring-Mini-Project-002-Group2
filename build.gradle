@@ -1,10 +1,37 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.4'
+    id 'org.springframework.boot' version '3.3.3'
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
-allprojects {
+group = 'com.config'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+subprojects {
+    apply plugin : 'java'
+    apply plugin : 'org.springframework.boot'
+    apply plugin : 'io.spring.dependency-management'
+
     group = 'com.config'
     version = '0.0.1-SNAPSHOT'
 
@@ -17,16 +44,9 @@ allprojects {
     repositories {
         mavenCentral()
     }
-}
-
-
-subprojects {
-    apply plugin : 'java'
-    apply plugin : 'org.springframework.boot'
-    apply plugin : 'io.spring.dependency-management'
 
     ext {
-        springCloudVersion = "2023.0.3"
+        set('springCloudVersion', "2023.0.3")
     }
 
     configurations {
@@ -36,6 +56,9 @@ subprojects {
     }
 
     dependencies {
+        if (project.name.contains("eureka-server")){
+            implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+        }
         if (!project.name.contains("eureka-server") && !project.name.contains("config-server") && !project.name.contains("api-gateway")){
             implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
             implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -47,7 +70,10 @@ subprojects {
             implementation 'org.springframework.boot:spring-boot-starter-actuator'
             implementation 'io.micrometer:micrometer-tracing-bridge-brave'
             implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-            implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+            implementation 'org.springframework.boot:spring-boot-starter-validation'
+            implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+            implementation 'org.keycloak:keycloak-spring-boot-starter:24.0.3'
+            implementation 'org.keycloak:keycloak-admin-client:24.0.3'
         }
         if (!project.name.contains("eureka-server") && !project.name.contains("config-server") && !project.name.contains("api-gateway") && !project.name.contains("keycloak-admin-client")){
             implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -55,21 +81,13 @@ subprojects {
         }
         if(project.name.contains("api-gateway")){
             implementation 'org.springframework.boot:spring-boot-starter-webflux'
-            implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui'
+            implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
             implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
-        }
-        if (project.name.contains("eureka-server")){
-            implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+            implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         }
         if (project.name.contains("config-server")){
             implementation 'org.springframework.cloud:spring-cloud-config-server'
         }
-        if (project.name.contains("keycloak-admin-client")){
-            implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-            implementation 'org.keycloak:keycloak-spring-boot-starter'
-            implementation 'org.keycloak:keycloak-admin-client'
-        }
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
