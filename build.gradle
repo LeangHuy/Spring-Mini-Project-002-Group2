@@ -89,6 +89,11 @@ subprojects {
         if (project.name.contains("config-server")){
             implementation 'org.springframework.cloud:spring-cloud-config-server'
         }
+        if (project.name.contains("keycloak-admin-client")){
+            implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+            implementation 'org.keycloak:keycloak-spring-boot-starter:24.0.3'
+            implementation 'org.keycloak:keycloak-admin-client:24.0.3'
+        }
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
