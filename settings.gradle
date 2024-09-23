@@ -4,4 +4,5 @@ include 'config-server'
 include 'eureka-server'
 include 'keycloak-admin-client'
 include 'task-service'
+include 'common'
 
