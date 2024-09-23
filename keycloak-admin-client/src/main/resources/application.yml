@@ -1,5 +1,7 @@
 spring:
   application:
     name: keycloak-admin-client
+  profiles:
+    active: config
   config:
     import: optional:configserver:http://localhost:8888

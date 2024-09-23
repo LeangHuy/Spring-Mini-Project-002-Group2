@@ -60,6 +60,9 @@ subprojects {
             implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
         }
         if (!project.name.contains("eureka-server") && !project.name.contains("config-server") && !project.name.contains("api-gateway")){
+            implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+            implementation 'org.keycloak:keycloak-spring-boot-starter:24.0.3'
+            implementation 'org.keycloak:keycloak-admin-client:24.0.3'
             implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
             implementation 'org.springframework.boot:spring-boot-starter-web'
             implementation 'org.springframework.cloud:spring-cloud-starter-config'
@@ -75,7 +78,7 @@ subprojects {
             implementation 'org.keycloak:keycloak-spring-boot-starter:24.0.3'
             implementation 'org.keycloak:keycloak-admin-client:24.0.3'
         }
-        if (!project.name.contains("eureka-server") && !project.name.contains("config-server") && !project.name.contains("api-gateway") && !project.name.contains("keycloak-admin-client")){
+        if (project.name.contains("task-service")){
             implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
             runtimeOnly 'org.postgresql:postgresql'
         }
@@ -88,11 +91,6 @@ subprojects {
         }
         if (project.name.contains("config-server")){
             implementation 'org.springframework.cloud:spring-cloud-config-server'
-        }
-        if (project.name.contains("keycloak-admin-client")){
-            implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-            implementation 'org.keycloak:keycloak-spring-boot-starter:24.0.3'
-            implementation 'org.keycloak:keycloak-admin-client:24.0.3'
         }
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
