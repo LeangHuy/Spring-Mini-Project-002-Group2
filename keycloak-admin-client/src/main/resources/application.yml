@@ -1,0 +1,10 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: keycloak-admin-client
+  profiles:
+    active: dev
+  cloud:
+    config:
+      enabled: false

@@ -11,11 +11,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 @OpenAPIDefinition(
         servers = @Server(url = "http://localhost:8081"),
-        info = @Info(title = "Task Service",
-                version = "v1",
-                description = "Task Service"))
-public class TaskServiceApplication {
+        info = @Info(title = "Keycloak Admin Client",
+        version = "v1",
+        description = "Keycloak Admin Client"))
+public class KeycloakAdminClientApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TaskServiceApplication.class, args);
+        SpringApplication.run(KeycloakAdminClientApplication.class, args);
     }
 }

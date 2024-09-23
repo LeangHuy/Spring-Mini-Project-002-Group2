@@ -1,3 +1,5 @@
 spring:
   application:
     name: mini-project-2
+server:
+  port: 9090
