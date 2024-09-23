@@ -7,11 +7,9 @@ spring:
         git:
           uri: https://github.com/LeangHuy/SPRING_MINI_PROJECT_002_Group2_CLOUD_CONFIG.git
           force-pull: true
-          username: LeangHuy
-          password: "{cipher}23bee5ff4b65b25bbfef90f9eee81dc0f8fe501de4d8b32b8c2661a7857816d8e76248a920cd9ba55308df038b08764533e725aded3ca687bb0e817d16afa062"
 #          default-label: main
-          default-label: khouch
-#          default-label: chhunly
+#          default-label: khouch
+          default-label: chhunly
 
 server:
   port: 8888
