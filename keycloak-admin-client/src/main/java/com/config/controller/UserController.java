@@ -47,4 +47,17 @@ public class UserController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/{userId}")
+    @Operation(summary = "Get user by id")
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable String userId){
+        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                .message("Get user by id successfully.")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(userService.getUserById(userId))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

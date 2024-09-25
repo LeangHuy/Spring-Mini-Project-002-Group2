@@ -1,6 +1,7 @@
 package com.config.service.serviceImpl;
 
 import com.config.exception.ConflictException;
+import com.config.exception.NotFoundException;
 import com.config.model.request.UserRequest;
 import com.config.response.UserResponse;
 import com.config.service.UserService;
@@ -51,7 +52,6 @@ public class UserServiceImpl implements UserService {
     public List<UserResponse> getAllUsers() {
         List<UserResponse> userResponseList = new ArrayList<>();
         List<UserRepresentation> userRepresentationList = keycloak.realm(realm).users().list();
-        System.out.println("user list : "+userRepresentationList.toArray());
         for (UserRepresentation userRepresentation : userRepresentationList) {
             UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
             userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
@@ -59,6 +59,20 @@ public class UserServiceImpl implements UserService {
             userResponseList.add(userResponse);
         }
         return userResponseList;
+    }
+
+    @Override
+    public UserResponse getUserById(String userId) {
+        UserRepresentation userRepresentation = null;
+        try {
+            userRepresentation = keycloak.realm(realm).users().get(userId).toRepresentation();
+        } catch (Exception e) {
+            throw new NotFoundException("User not found");
+        }
+        UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
+        userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
+        userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
+        return userResponse;
     }
 
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) {
