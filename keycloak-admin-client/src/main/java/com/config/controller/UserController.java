@@ -1,5 +1,6 @@
 package com.config.controller;
 
+import com.config.model.entity.User;
 import com.config.model.request.UserRequest;
 import com.config.response.ApiResponse;
 import com.config.response.UserResponse;
@@ -101,6 +102,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
+    @DeleteMapping("/{userId}")
+    @Operation(summary = "delete user by user id")
+    public ResponseEntity<ApiResponse<UserResponse>> deleteUserByUserId(@PathVariable String userId){
+       userService.deleteUserByUserId(userId);
+    ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                    .message("Delete user by user id successfully.")
+                    .status(HttpStatus.OK)
+                    .statusCode(HttpStatus.OK.value())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 }

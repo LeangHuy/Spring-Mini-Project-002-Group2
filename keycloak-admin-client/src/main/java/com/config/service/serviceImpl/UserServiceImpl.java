@@ -110,6 +110,12 @@ public class UserServiceImpl implements UserService {
         return getUserById(userId);
     }
 
+    @Override
+    public void deleteUserByUserId(String userId) {
+        UsersResource usersResource = keycloak.realm(realm).users();
+        usersResource.get(userId).remove();
+    }
+
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(userRequest.getUsername());
