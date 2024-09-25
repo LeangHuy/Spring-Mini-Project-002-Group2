@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @SpringBootApplication
 @EnableDiscoveryClient
 @OpenAPIDefinition(
-        servers = @Server(url = "http://localhost:8081"),
+        servers = @Server(url = "/"),
         info = @Info(title = "Keycloak Admin Client",
         version = "v1",
         description = "Keycloak Admin Client"))

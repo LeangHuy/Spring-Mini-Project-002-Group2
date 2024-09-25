@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Add user to keycloak")
-    public ResponseEntity<ApiResponse<UserResponse> > register(@RequestBody @Valid UserRequest userRequest) throws Exception {
+    public ResponseEntity<ApiResponse<UserResponse> > addUser(@RequestBody @Valid UserRequest userRequest){
         ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
                 .message("User created successfully.")
                 .status(HttpStatus.CREATED)
@@ -76,7 +76,7 @@ public class UserController {
 
     @GetMapping("/email")
     @Operation(summary = "Get user by email")
-    public  ResponseEntity<ApiResponse<UserResponse>> getUserByUsernamme(@RequestParam String email){
+    public  ResponseEntity<ApiResponse<UserResponse>> getUserByEmail(@RequestParam String email){
         ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
                 .message("Get user by email successfully.")
                 .status(HttpStatus.OK)

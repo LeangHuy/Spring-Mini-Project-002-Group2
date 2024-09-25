@@ -10,11 +10,12 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
 @OpenAPIDefinition(
-        servers = @Server(url = "http://localhost:8081"),
+        servers = @Server(url = "/"),
         info = @Info(title = "Task Service",
                 version = "v1",
                 description = "Task Service"))
@@ -27,6 +28,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
                 )
         )
 )
+@EnableFeignClients
 public class TaskServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(TaskServiceApplication.class, args);

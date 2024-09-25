@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/group")
+@RequestMapping("/api/v1/groups")
 @SecurityRequirement(name = "mini-project-2")
 public class GroupController {
 
