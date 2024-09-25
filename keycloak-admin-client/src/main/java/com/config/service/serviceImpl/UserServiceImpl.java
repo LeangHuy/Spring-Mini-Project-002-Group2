@@ -82,11 +82,21 @@ public class UserServiceImpl implements UserService {
         if(userRepresentationList.isEmpty()){
             throw new NotFoundException("username is not found");
         }
-
-        UserRepresentation userRepresentation = userRepresentationList.get(0);
+        UserRepresentation userRepresentation = userRepresentationList.getFirst();
         UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
-//        userRepresentation.singleAttribute("createdAt", String.valueOf(LocalDateTime.now()));
-//        userRepresentation.singleAttribute("lastModifiedAt", String.valueOf(LocalDateTime.now()));
+        userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
+        userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
+        return userResponse;
+    }
+
+    @Override
+    public UserResponse getUserByEmail(String email) {
+        UsersResource usersResource = keycloak.realm(realm).users();
+        UserRepresentation userRepresentation = usersResource.searchByEmail(email,true).getFirst();
+        if(userRepresentation == null){
+            throw new NotFoundException("email is not found");
+        }
+        UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
         userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
         userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
         return userResponse;
