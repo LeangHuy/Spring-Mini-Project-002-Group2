@@ -25,5 +25,5 @@ public interface GroupService {
 
     GroupResponse DeletedGroupByGroupID(UUID groupId);
 
-    GroupUserResponse getAllGroupUser(UUID groupId);
+    GroupUserResponse getAllGroupUser(String groupId);
 }

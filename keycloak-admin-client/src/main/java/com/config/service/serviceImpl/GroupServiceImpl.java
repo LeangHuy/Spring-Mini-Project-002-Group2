@@ -1,12 +1,14 @@
 package com.config.service.serviceImpl;
 
 import com.config.exception.ConflictException;
+import com.config.exception.NotFoundException;
 import com.config.model.request.GroupRequest;
 import com.config.response.GroupUserResponse;
 import com.config.response.UserGroupResponse;
 import com.config.response.UserResponse;
 import com.config.response.GroupResponse;
 import com.config.service.GroupService;
+import com.config.service.UserService;
 import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.GroupResource;
@@ -17,7 +19,6 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,10 +28,12 @@ public class GroupServiceImpl implements GroupService {
 
     private final Keycloak keycloak;
     private final String realm;
+    private final UserService userService;
 
-    public GroupServiceImpl(Keycloak keycloak, @Value("${keycloak.realm}") String realm) {
+    public GroupServiceImpl(Keycloak keycloak, @Value("${keycloak.realm}") String realm, UserService userService) {
         this.keycloak = keycloak;
         this.realm = realm;
+        this.userService = userService;
     }
 
     @Override
@@ -40,10 +43,12 @@ public class GroupServiceImpl implements GroupService {
                 .get(userId.toString());
         userResource.joinGroup(groupId.toString());
 
-        UserResponse addUserResponse = new UserResponse();
-
-        getGroupByID(groupId);
-        return null;
+        UserResponse userResponse = userService.getUserById(userId.toString());
+        GroupResponse groupResponse = getGroupByID(groupId);
+        UserGroupResponse userGroupResponse = new UserGroupResponse();
+        userGroupResponse.setUser(userResponse);
+        userGroupResponse.setGroup(groupResponse);
+        return userGroupResponse;
     }
 
 
@@ -65,10 +70,15 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupResponse getGroupByID(UUID groupId) {
-        GroupResource groupResource = keycloak.realm(realm).groups().group(groupId.toString());
+        GroupRepresentation groupResource;
+        try {
+            groupResource = keycloak.realm(realm).groups().group(groupId.toString()).toRepresentation();
+        }catch (Exception e) {
+            throw new NotFoundException("Group not found");
+        }
         GroupResponse groupResponse = new GroupResponse();
-        groupResponse.setGroupId(groupResource.toRepresentation().getId());
-        groupResponse.setGroupName(groupResource.toRepresentation().getName());
+        groupResponse.setGroupId(groupResource.getId());
+        groupResponse.setGroupName(groupResource.getName());
         return groupResponse;
     }
 
@@ -105,25 +115,17 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupUserResponse getAllGroupUser(UUID groupId) {
-        GroupResource groupResource = keycloak.realm(realm).groups().group(groupId.toString());
+    public GroupUserResponse getAllGroupUser(String groupId) {
+        GroupResource groupResource = keycloak.realm(realm).groups().group(groupId);
         List<UserRepresentation> userRepresentations = groupResource.members();
         GroupUserResponse groupUserResponse = new GroupUserResponse();
         List<UserResponse> usersList = new ArrayList<>();
         for (UserRepresentation userRepresentation : userRepresentations) {
-            UserResponse userResponse = new UserResponse();
-            userResponse.setUserId(UUID.fromString(userRepresentation.getId()));
-            userResponse.setUserName(userRepresentation.getUsername());
-            userResponse.setEmail(userRepresentation.getEmail());
-            userResponse.setFirstName(userRepresentation.getFirstName());
-            userResponse.setLastName(userRepresentation.getLastName());
-            userResponse.setCreatedAt(LocalDate.now());
-            userResponse.setLastModifiedAt(LocalDate.now());
-
+            UserResponse userResponse = userService.getUserById(userRepresentation.getId());
             usersList.add(userResponse);
         }
-        groupUserResponse.setUser(usersList);
-        groupUserResponse.setGroup(getGroupByID(groupId));
+        groupUserResponse.setUsers(usersList);
+        groupUserResponse.setGroup(getGroupByID(UUID.fromString(groupId)));
 
         return groupUserResponse;
     }

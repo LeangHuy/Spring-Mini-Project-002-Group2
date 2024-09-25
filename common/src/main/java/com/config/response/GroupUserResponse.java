@@ -12,10 +12,6 @@ import java.util.List;
 @Setter
 @Getter
 public class GroupUserResponse {
-    GroupResponse group;
-    List<UserResponse> users;
-
-    public void setUser(List<UserResponse> usersList) {
-        this.users = usersList;
-    }
+    private GroupResponse group;
+    private  List<UserResponse> users;
 }
