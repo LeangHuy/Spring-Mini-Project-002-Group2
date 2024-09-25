@@ -1,6 +1,5 @@
 package com.config.controller;
 
-import com.config.model.entity.User;
 import com.config.model.request.UserRequest;
 import com.config.response.ApiResponse;
 import com.config.response.UserResponse;
@@ -76,7 +75,7 @@ public class UserController {
     }
 
     @GetMapping("/email")
-    @Operation(summary = "get user by email")
+    @Operation(summary = "Get user by email")
     public  ResponseEntity<ApiResponse<UserResponse>> getUserByUsernamme(@RequestParam String email){
         ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
                 .message("Get user by email successfully.")
@@ -90,7 +89,7 @@ public class UserController {
 
 
     @PutMapping("/{userId}")
-    @Operation(summary = "update user by user id")
+    @Operation(summary = "Update user by user id")
     public ResponseEntity<ApiResponse<UserResponse>> updateUserByUserId(@PathVariable String userId, @RequestBody @Valid UserRequest userRequest){
         ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
                 .message("Update user by user id successfully.")
@@ -103,7 +102,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    @Operation(summary = "delete user by user id")
+    @Operation(summary = "Delete user by user id")
     public ResponseEntity<ApiResponse<UserResponse>> deleteUserByUserId(@PathVariable String userId){
        userService.deleteUserByUserId(userId);
     ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()

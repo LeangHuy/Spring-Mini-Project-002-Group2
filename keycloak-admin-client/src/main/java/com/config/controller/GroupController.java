@@ -3,6 +3,7 @@ package com.config.controller;
 import com.config.model.request.GroupRequest;
 import com.config.response.*;
 import com.config.service.GroupService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping
+    @Operation(summary = "Add group to keycloak")
     public ResponseEntity<ApiResponse<GroupResponse>> createGroup(@Valid @RequestBody GroupRequest groupRequest) {
         GroupResponse group = groupService.createGroup(groupRequest);
         ApiResponse<GroupResponse> response = ApiResponse.<GroupResponse>builder()
@@ -36,7 +38,8 @@ public class GroupController {
     }
 
     @PostMapping("/{groupId}/user/{userId}")
-    public ResponseEntity<ApiResponse<UserGroupResponse>> AddUserToGroup(@PathVariable("groupId") UUID groupId, @PathVariable("userId") UUID userId) {
+    @Operation(summary = "Add user to group")
+    public ResponseEntity<ApiResponse<UserGroupResponse>> AddUserToGroup(@PathVariable UUID groupId, @PathVariable UUID userId) {
         ApiResponse<UserGroupResponse> response = ApiResponse.<UserGroupResponse>builder()
                 .message("Add user to group successfully ")
                 .status(HttpStatus.OK)
@@ -48,7 +51,8 @@ public class GroupController {
     }
 
     @GetMapping("/{groupId}")
-    public ResponseEntity<ApiResponse<GroupResponse>> getGroup(@PathVariable("groupId") UUID groupId) {
+    @Operation(summary = "Get group by group id")
+    public ResponseEntity<ApiResponse<GroupResponse>> getGroup(@PathVariable UUID groupId) {
         ApiResponse<GroupResponse> response = ApiResponse.<GroupResponse>builder()
                 .message("Get group successfully")
                 .status(HttpStatus.OK)
@@ -59,7 +63,8 @@ public class GroupController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping
+    @Operation(summary = "Get all group")
     public ResponseEntity<ApiResponse<List<GroupResponse>>> getAllGroup() {
         ApiResponse<List<GroupResponse>> response = ApiResponse.<List<GroupResponse>>builder()
                 .message("Get All group successfully ")
@@ -72,6 +77,7 @@ public class GroupController {
     }
 
     @PutMapping("/{groupId}")
+    @Operation(summary = "Update group by id")
     public ResponseEntity<ApiResponse<GroupResponse>> updateGroup(@PathVariable UUID groupId, @Valid @RequestBody GroupRequest groupRequest) {
         ApiResponse<GroupResponse> response = ApiResponse.<GroupResponse>builder()
                 .message("Update group successfully")
@@ -84,7 +90,8 @@ public class GroupController {
     }
 
     @DeleteMapping("/{groupId}")
-    public ResponseEntity<ApiResponse<GroupResponse>> DeleteGroup(@PathVariable("groupId") UUID groupId) {
+    @Operation(summary = "Delete group by group id")
+    public ResponseEntity<ApiResponse<GroupResponse>> DeleteGroup(@PathVariable UUID groupId) {
         groupService.DeletedGroupByGroupID(groupId);
         ApiResponse<GroupResponse> response = ApiResponse.<GroupResponse>builder()
                 .message("Deleted group "+groupId+" successfully")
@@ -96,7 +103,8 @@ public class GroupController {
     }
 
     @GetMapping("/{groupId}/users")
-    public ResponseEntity<ApiResponse<GroupUserResponse>> getUsers(@PathVariable("groupId") String groupId) {
+    @Operation(summary = "Get user in group by group id")
+    public ResponseEntity<ApiResponse<GroupUserResponse>> getUsers(@PathVariable String groupId) {
         ApiResponse<GroupUserResponse> response = ApiResponse.<GroupUserResponse>builder()
                 .message("Get All group user successfully: ")
                 .status(HttpStatus.OK)
