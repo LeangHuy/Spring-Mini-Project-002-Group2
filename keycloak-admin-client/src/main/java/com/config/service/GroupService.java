@@ -23,7 +23,7 @@ public interface GroupService {
 
     GroupResponse updateGroupByGroupID(UUID groupId, GroupRequest groupRequest);
 
-    GroupResponse DeletedGroupByGroupID(UUID groupId);
+    void DeletedGroupByGroupID(UUID groupId);
 
     GroupUserResponse getAllGroupUser(String groupId);
 }

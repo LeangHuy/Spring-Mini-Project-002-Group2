@@ -46,8 +46,8 @@ public class GroupServiceImpl implements GroupService {
         UserResponse userResponse = userService.getUserById(userId.toString());
         GroupResponse groupResponse = getGroupByID(groupId);
         UserGroupResponse userGroupResponse = new UserGroupResponse();
-        userGroupResponse.setUser(userResponse);
         userGroupResponse.setGroup(groupResponse);
+        userGroupResponse.setUser(userResponse);
         return userGroupResponse;
     }
 
@@ -108,16 +108,20 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupResponse DeletedGroupByGroupID(UUID groupId) {
+    public void DeletedGroupByGroupID(UUID groupId) {
         GroupResource groupResource = keycloak.realm(realm).groups().group(groupId.toString());
         groupResource.remove();
-        return null;
     }
 
     @Override
     public GroupUserResponse getAllGroupUser(String groupId) {
-        GroupResource groupResource = keycloak.realm(realm).groups().group(groupId);
-        List<UserRepresentation> userRepresentations = groupResource.members();
+        List<UserRepresentation> userRepresentations;
+        try{
+            GroupResource groupResource = keycloak.realm(realm).groups().group(groupId);
+            userRepresentations = groupResource.members();
+        }catch (Exception e) {
+            throw new NotFoundException("Group not found");
+        }
         GroupUserResponse groupUserResponse = new GroupUserResponse();
         List<UserResponse> usersList = new ArrayList<>();
         for (UserRepresentation userRepresentation : userRepresentations) {

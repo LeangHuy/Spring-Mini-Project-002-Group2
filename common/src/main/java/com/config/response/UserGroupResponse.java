@@ -8,6 +8,6 @@ import lombok.*;
 @Getter
 @Builder
 public class UserGroupResponse {
-    private UserResponse user;
     private GroupResponse group;
+    private UserResponse user;
 }

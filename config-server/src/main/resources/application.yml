@@ -7,9 +7,9 @@ spring:
         git:
           uri: https://github.com/LeangHuy/SPRING_MINI_PROJECT_002_Group2_CLOUD_CONFIG.git
           force-pull: true
-#          default-label: main
+          default-label: main
 #          default-label: khouch
-          default-label: chhunly
+#          default-label: chhunly
 
 server:
   port: 8888

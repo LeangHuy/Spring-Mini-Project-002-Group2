@@ -85,11 +85,11 @@ public class GroupController {
 
     @DeleteMapping("/{groupId}")
     public ResponseEntity<ApiResponse<GroupResponse>> DeleteGroup(@PathVariable("groupId") UUID groupId) {
+        groupService.DeletedGroupByGroupID(groupId);
         ApiResponse<GroupResponse> response = ApiResponse.<GroupResponse>builder()
                 .message("Deleted group "+groupId+" successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
-                .payload(groupService.DeletedGroupByGroupID(groupId))
                 .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
