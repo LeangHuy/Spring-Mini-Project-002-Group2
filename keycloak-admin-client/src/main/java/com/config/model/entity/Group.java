@@ -13,8 +13,4 @@ import java.util.UUID;
 public class Group {
     private UUID groupId;
     private String name;
-
-    public void setId(UUID groupId) {
-        this.groupId = groupId;
-    }
 }

@@ -1,18 +1,19 @@
 package com.config.service.serviceImpl;
 
+import com.config.exception.ConflictException;
 import com.config.model.entity.Group;
 import com.config.model.request.GroupRequest;
 import com.config.response.GroupResponse;
 import com.config.service.GroupService;
+import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.GroupsResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -40,26 +41,17 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupResponse createGroup(GroupRequest groupRequest) {
-        RealmResource groupsResource = keycloak.realm(realm);
-        GroupRepresentation newGroup = new GroupRepresentation();
-        newGroup.setName(groupRequest.getGroupName());
-        groupsResource.groups().add(newGroup);
-
-        List<GroupRepresentation> allGroups = groupsResource.groups().groups();
-        String groupId = null;
-        for (GroupRepresentation group : allGroups) {
-            if (group.getName().equals(groupRequest.getGroupName())) {
-                groupId = group.getId();
-                break;
-            }
-        }
-
-        if (groupId == null) {
-            throw new IllegalStateException("Group creation failed, group ID not found.");
+        GroupsResource groupsResource = keycloak.realm(realm).groups();
+        GroupRepresentation groupRepresentation = new GroupRepresentation();
+        groupRepresentation.singleAttribute("group_id",UUID.randomUUID().toString());
+        groupRepresentation.setName(groupRequest.getGroupName());
+        Response response = groupsResource.add(groupRepresentation);
+        if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+            throw new ConflictException("This group name is already in existed");
         }
         GroupResponse groupResponse = new GroupResponse();
-        groupResponse.setGroupId(groupId);
-        groupResponse.setGroupName(groupRequest.getGroupName());
+        groupResponse.setGroupId(groupRepresentation.getAttributes().get("group_id").getFirst());
+        groupResponse.setGroupName(groupRepresentation.getName());
         return groupResponse;
     }
 

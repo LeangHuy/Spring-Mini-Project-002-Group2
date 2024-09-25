@@ -1,14 +1,12 @@
 package com.config.model.request;
 
-import io.swagger.v3.oas.annotations.servers.Server;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Server
+@Setter
 @Getter
+@Builder
 public class GroupRequest {
     private String groupName;
 }

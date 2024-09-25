@@ -6,6 +6,7 @@ import com.config.response.ApiResponse;
 import com.config.response.GroupResponse;
 import com.config.service.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/group")
+@SecurityRequirement(name = "mini-project-2")
 public class GroupController {
 
     private final GroupService groupService;
@@ -39,7 +40,7 @@ public class GroupController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ApiResponse<GroupResponse>> createGroup(@RequestBody GroupRequest groupRequest) {
         GroupResponse group = groupService.createGroup(groupRequest);
         ApiResponse<GroupResponse> response = ApiResponse.<GroupResponse>builder()
