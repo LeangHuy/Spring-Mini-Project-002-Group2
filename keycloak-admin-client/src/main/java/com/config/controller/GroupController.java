@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -55,6 +56,42 @@ public class GroupController {
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .payload(groupService.getGroupByID(groupId))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<List<GroupResponse>>> getAllGroup() {
+        ApiResponse<List<GroupResponse>> response = ApiResponse.<List<GroupResponse>>builder()
+                .message("Get All group successfully: ")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(groupService.getAllGroup())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{groupID}")
+    public ResponseEntity<ApiResponse<GroupResponse>> updateGroup(@PathVariable("groupID") UUID groupId, @RequestBody GroupRequest groupRequest) {
+        ApiResponse<GroupResponse> response = ApiResponse.<GroupResponse>builder()
+                .message("Update group successfully: ")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(groupService.updateGroupByGroupID(groupId,groupRequest))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{groupId}")
+    public ResponseEntity<ApiResponse<GroupResponse>> DeleteGroup(@PathVariable("groupId") UUID groupId) {
+        ApiResponse<GroupResponse> response = ApiResponse.<GroupResponse>builder()
+                .message("Deleted group "+groupId+" successfully: ")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(groupService.DeletedGroupByGroupID(groupId))
                 .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);

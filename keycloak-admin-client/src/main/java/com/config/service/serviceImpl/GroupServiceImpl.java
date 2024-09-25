@@ -8,12 +8,15 @@ import com.config.response.GroupResponse;
 import com.config.service.GroupService;
 import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.GroupResource;
 import org.keycloak.admin.client.resource.GroupsResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,6 +39,7 @@ public class GroupServiceImpl implements GroupService {
 
         UserResponse addUserResponse = new UserResponse();
 
+        getGroupByID(groupId);
         return null;
     }
 
@@ -58,6 +62,42 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupResponse getGroupByID(UUID groupId) {
+        GroupResource groupResource = keycloak.realm(realm).groups().group(groupId.toString());
+        GroupResponse groupResponse = new GroupResponse();
+        groupResponse.setGroupId(groupResource.toRepresentation().getId());
+        groupResponse.setGroupName(groupResource.toRepresentation().getName());
+        return groupResponse;
+    }
+
+    @Override
+    public List<GroupResponse> getAllGroup() {
+        GroupsResource groupsResource = keycloak.realm(realm).groups();
+        List<GroupResponse> groupResponseList = new ArrayList<>();
+        for (GroupRepresentation groupRepresentation : groupsResource.groups()) {
+            GroupResponse groupResponse = new GroupResponse();
+            groupResponse.setGroupId(groupRepresentation.getId());
+            groupResponse.setGroupName(groupRepresentation.getName());
+            groupResponseList.add(groupResponse);
+        }
+        return groupResponseList;
+    }
+
+    @Override
+    public GroupResponse updateGroupByGroupID(UUID groupId, GroupRequest groupRequest) {
+        GroupResource groupResource = keycloak.realm(realm).groups().group(groupId.toString());
+        GroupRepresentation groupRepresentation = groupResource.toRepresentation();
+        groupRepresentation.setName(groupRequest.getGroupName());
+        groupResource.update(groupRepresentation);
+        GroupResponse groupResponse = new GroupResponse();
+        groupResponse.setGroupId(groupRepresentation.getId());
+        groupResponse.setGroupName(groupRepresentation.getName());
+        return groupResponse;
+    }
+
+    @Override
+    public GroupResponse DeletedGroupByGroupID(UUID groupId) {
+        GroupResource groupResource = keycloak.realm(realm).groups().group(groupId.toString());
+        groupResource.remove();
         return null;
     }
 }

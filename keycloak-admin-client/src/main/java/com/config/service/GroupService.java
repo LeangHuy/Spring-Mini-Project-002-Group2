@@ -5,6 +5,7 @@ import com.config.response.UserGroupResponse;
 import com.config.response.GroupResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 
+import java.util.List;
 import java.util.UUID;
 
 @Server
@@ -16,4 +17,10 @@ public interface GroupService {
 
 
     GroupResponse getGroupByID(UUID groupId);
+
+    List<GroupResponse> getAllGroup();
+
+    GroupResponse updateGroupByGroupID(UUID groupId, GroupRequest groupRequest);
+
+    GroupResponse DeletedGroupByGroupID(UUID groupId);
 }
