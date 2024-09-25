@@ -10,12 +10,10 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -35,5 +33,18 @@ public class UserController {
                 .timestamp(LocalDateTime.now())
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all users")
+    public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers(){
+        ApiResponse<List<UserResponse>> response = ApiResponse.<List<UserResponse>>builder()
+                .message("Get all users successfully.")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(userService.getAllUsers())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

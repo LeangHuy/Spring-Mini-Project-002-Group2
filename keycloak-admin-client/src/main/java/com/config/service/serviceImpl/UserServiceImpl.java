@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,6 +45,20 @@ public class UserServiceImpl implements UserService {
         userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
         userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
         return userResponse;
+    }
+
+    @Override
+    public List<UserResponse> getAllUsers() {
+        List<UserResponse> userResponseList = new ArrayList<>();
+        List<UserRepresentation> userRepresentationList = keycloak.realm(realm).users().list();
+        System.out.println("user list : "+userRepresentationList.toArray());
+        for (UserRepresentation userRepresentation : userRepresentationList) {
+            UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
+            userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
+            userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
+            userResponseList.add(userResponse);
+        }
+        return userResponseList;
     }
 
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) {
