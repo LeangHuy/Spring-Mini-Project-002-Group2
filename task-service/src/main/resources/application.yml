@@ -7,4 +7,6 @@ spring:
     active: dev, config
   config:
     import: "optional:configserver:http://localhost:8888"
-
+eureka:
+  instance:
+    prefer-ip-address: true
