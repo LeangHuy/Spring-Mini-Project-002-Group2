@@ -102,6 +102,14 @@ public class UserServiceImpl implements UserService {
         return userResponse;
     }
 
+    @Override
+    public UserResponse updateUserByUserId(String userId, UserRequest userRequest) {
+        UserRepresentation representation = prepareUserRepresentation(userRequest, preparePasswordRepresentation(userRequest.getPassword()));
+        UsersResource usersResource = keycloak.realm(realm).users();
+        usersResource.get(userId).update(representation);
+        return getUserById(userId);
+    }
+
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(userRequest.getUsername());

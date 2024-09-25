@@ -88,4 +88,19 @@ public class UserController {
     }
 
 
+    @PutMapping("/{userId}")
+    @Operation(summary = "update user by user id")
+    public ResponseEntity<ApiResponse<UserResponse>> updateUserByUserId(@PathVariable String userId, @RequestBody @Valid UserRequest userRequest){
+        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                .message("Update user by user id successfully.")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(userService.updateUserByUserId(userId, userRequest))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+
 }
