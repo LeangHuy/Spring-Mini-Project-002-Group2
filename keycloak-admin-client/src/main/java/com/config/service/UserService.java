@@ -9,4 +9,6 @@ public interface UserService {
     UserResponse addUser(UserRequest userRequest);
     List<UserResponse> getAllUsers();
     UserResponse getUserById(String userId);
+
+    UserResponse getUserByUsername(String username);
 }

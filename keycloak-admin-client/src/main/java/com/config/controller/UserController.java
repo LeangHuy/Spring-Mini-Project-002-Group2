@@ -60,4 +60,17 @@ public class UserController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("username")
+    @Operation(summary = "Get user by username")
+    public ResponseEntity<ApiResponse<UserResponse>> getUserByUsername(@RequestParam String username){
+        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                .message("Get user by username successfully.")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(userService.getUserByUsername(username))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

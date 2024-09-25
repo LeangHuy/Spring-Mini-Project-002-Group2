@@ -75,6 +75,23 @@ public class UserServiceImpl implements UserService {
         return userResponse;
     }
 
+    @Override
+    public UserResponse getUserByUsername(String username) {
+        UsersResource usersResource = keycloak.realm(realm).users();
+        List<UserRepresentation> userRepresentationList = usersResource.search(username);
+        if(userRepresentationList.isEmpty()){
+            throw new NotFoundException("username is not found");
+        }
+
+        UserRepresentation userRepresentation = userRepresentationList.get(0);
+        UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
+//        userRepresentation.singleAttribute("createdAt", String.valueOf(LocalDateTime.now()));
+//        userRepresentation.singleAttribute("lastModifiedAt", String.valueOf(LocalDateTime.now()));
+        userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
+        userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
+        return userResponse;
+    }
+
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(userRequest.getUsername());
