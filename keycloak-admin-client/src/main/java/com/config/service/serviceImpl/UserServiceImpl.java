@@ -6,7 +6,6 @@ import com.config.model.request.UserRequest;
 import com.config.response.UserResponse;
 import com.config.service.UserService;
 import jakarta.ws.rs.core.Response;
-import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -37,14 +36,21 @@ public class UserServiceImpl implements UserService {
     public UserResponse addUser(UserRequest userRequest) {
         UserRepresentation representation = prepareUserRepresentation(userRequest, preparePasswordRepresentation(userRequest.getPassword()));
         UsersResource usersResource = keycloak.realm(realm).users();
+        UserResponse userResponse = getUserByUsername(userRequest.getUsername());
+        if (userResponse.getUsername().equalsIgnoreCase(userRequest.getUsername())) {
+            throw new ConflictException("Username is already existed");
+        }
+        if (userResponse.getEmail().equalsIgnoreCase(userRequest.getEmail())) {
+            throw new ConflictException("Email is already existed");
+        }
         Response response = usersResource.create(representation);
         if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
             throw new ConflictException("This email is already registered");
         }
-        UserRepresentation userRepresentation = usersResource.get(CreatedResponseUtil.getCreatedId(response)).toRepresentation();
-        UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
-        userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
-        userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
+//        UserRepresentation userRepresentation = usersResource.get(CreatedResponseUtil.getCreatedId(response)).toRepresentation();
+//        UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
+//        userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
+//        userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
         return userResponse;
     }
 
@@ -63,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getUserById(String userId) {
-        UserRepresentation userRepresentation = null;
+        UserRepresentation userRepresentation;
         try {
             userRepresentation = keycloak.realm(realm).users().get(userId).toRepresentation();
         } catch (Exception e) {
