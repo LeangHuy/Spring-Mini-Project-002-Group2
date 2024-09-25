@@ -2,6 +2,7 @@ package com.config.service.serviceImpl;
 
 import com.config.exception.ConflictException;
 import com.config.model.request.GroupRequest;
+import com.config.response.GroupUserResponse;
 import com.config.response.UserGroupResponse;
 import com.config.response.UserResponse;
 import com.config.response.GroupResponse;
@@ -12,9 +13,11 @@ import org.keycloak.admin.client.resource.GroupResource;
 import org.keycloak.admin.client.resource.GroupsResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -100,4 +103,30 @@ public class GroupServiceImpl implements GroupService {
         groupResource.remove();
         return null;
     }
+
+    @Override
+    public GroupUserResponse getAllGroupUser(UUID groupId) {
+        GroupResource groupResource = keycloak.realm(realm).groups().group(groupId.toString());
+        List<UserRepresentation> userRepresentations = groupResource.members();
+        GroupUserResponse groupUserResponse = new GroupUserResponse();
+        List<UserResponse> usersList = new ArrayList<>();
+        for (UserRepresentation userRepresentation : userRepresentations) {
+            UserResponse userResponse = new UserResponse();
+            userResponse.setUserId(UUID.fromString(userRepresentation.getId()));
+            userResponse.setUserName(userRepresentation.getUsername());
+            userResponse.setEmail(userRepresentation.getEmail());
+            userResponse.setFirstName(userRepresentation.getFirstName());
+            userResponse.setLastName(userRepresentation.getLastName());
+            userResponse.setCreatedAt(LocalDate.now());
+            userResponse.setLastModifiedAt(LocalDate.now());
+
+            usersList.add(userResponse);
+        }
+        groupUserResponse.setUser(usersList);
+        groupUserResponse.setGroup(getGroupByID(groupId));
+
+        return groupUserResponse;
+    }
+
+
 }

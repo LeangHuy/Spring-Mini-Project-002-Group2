@@ -1,6 +1,7 @@
 package com.config.service;
 
 import com.config.model.request.GroupRequest;
+import com.config.response.GroupUserResponse;
 import com.config.response.UserGroupResponse;
 import com.config.response.GroupResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
@@ -23,4 +24,6 @@ public interface GroupService {
     GroupResponse updateGroupByGroupID(UUID groupId, GroupRequest groupRequest);
 
     GroupResponse DeletedGroupByGroupID(UUID groupId);
+
+    GroupUserResponse getAllGroupUser(UUID groupId);
 }

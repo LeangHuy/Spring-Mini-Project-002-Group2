@@ -1,10 +1,7 @@
 package com.config.controller;
 
 import com.config.model.request.GroupRequest;
-import com.config.response.UserGroupResponse;
-import com.config.response.UserResponse;
-import com.config.response.ApiResponse;
-import com.config.response.GroupResponse;
+import com.config.response.*;
 import com.config.service.GroupService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
@@ -92,6 +89,18 @@ public class GroupController {
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .payload(groupService.DeletedGroupByGroupID(groupId))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{groupId}/users")
+    public ResponseEntity<ApiResponse<GroupUserResponse>> getUsers(@PathVariable("groupId") UUID groupId) {
+        ApiResponse<GroupUserResponse> response = ApiResponse.<GroupUserResponse>builder()
+                .message("Get All group user successfully: ")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(groupService.getAllGroupUser(groupId))
                 .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
