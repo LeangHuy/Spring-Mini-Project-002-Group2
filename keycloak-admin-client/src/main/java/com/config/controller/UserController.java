@@ -1,5 +1,6 @@
 package com.config.controller;
 
+import com.config.model.entity.User;
 import com.config.model.request.UserRequest;
 import com.config.response.ApiResponse;
 import com.config.response.UserResponse;
@@ -60,4 +61,58 @@ public class UserController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/username")
+    @Operation(summary = "Get user by username")
+    public ResponseEntity<ApiResponse<UserResponse>> getUserByUsername(@RequestParam String username){
+        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                .message("Get user by username successfully.")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(userService.getUserByUsername(username))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/email")
+    @Operation(summary = "get user by email")
+    public  ResponseEntity<ApiResponse<UserResponse>> getUserByUsernamme(@RequestParam String email){
+        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                .message("Get user by email successfully.")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(userService.getUserByEmail(email))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    @PutMapping("/{userId}")
+    @Operation(summary = "update user by user id")
+    public ResponseEntity<ApiResponse<UserResponse>> updateUserByUserId(@PathVariable String userId, @RequestBody @Valid UserRequest userRequest){
+        ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                .message("Update user by user id successfully.")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .payload(userService.updateUserByUserId(userId, userRequest))
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/{userId}")
+    @Operation(summary = "delete user by user id")
+    public ResponseEntity<ApiResponse<UserResponse>> deleteUserByUserId(@PathVariable String userId){
+       userService.deleteUserByUserId(userId);
+    ApiResponse<UserResponse> response = ApiResponse.<UserResponse>builder()
+                    .message("Delete user by user id successfully.")
+                    .status(HttpStatus.OK)
+                    .statusCode(HttpStatus.OK.value())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

@@ -75,6 +75,47 @@ public class UserServiceImpl implements UserService {
         return userResponse;
     }
 
+    @Override
+    public UserResponse getUserByUsername(String username) {
+        UsersResource usersResource = keycloak.realm(realm).users();
+        List<UserRepresentation> userRepresentationList = usersResource.search(username);
+        if(userRepresentationList.isEmpty()){
+            throw new NotFoundException("username is not found");
+        }
+        UserRepresentation userRepresentation = userRepresentationList.getFirst();
+        UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
+        userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
+        userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
+        return userResponse;
+    }
+
+    @Override
+    public UserResponse getUserByEmail(String email) {
+        UsersResource usersResource = keycloak.realm(realm).users();
+        UserRepresentation userRepresentation = usersResource.searchByEmail(email,true).getFirst();
+        if(userRepresentation == null){
+            throw new NotFoundException("email is not found");
+        }
+        UserResponse userResponse = modelMapper.map(userRepresentation, UserResponse.class);
+        userResponse.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
+        userResponse.setLastModifiedAt(userRepresentation.getAttributes().get("lastModifiedAt").getFirst());
+        return userResponse;
+    }
+
+    @Override
+    public UserResponse updateUserByUserId(String userId, UserRequest userRequest) {
+        UserRepresentation representation = prepareUserRepresentation(userRequest, preparePasswordRepresentation(userRequest.getPassword()));
+        UsersResource usersResource = keycloak.realm(realm).users();
+        usersResource.get(userId).update(representation);
+        return getUserById(userId);
+    }
+
+    @Override
+    public void deleteUserByUserId(String userId) {
+        UsersResource usersResource = keycloak.realm(realm).users();
+        usersResource.get(userId).remove();
+    }
+
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(userRequest.getUsername());
