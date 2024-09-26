@@ -18,4 +18,8 @@ public record TaskRequest(
         LocalDateTime lastModifiedDate = LocalDateTime.now();
         return new Task(null, this.taskName, this.description, this.createdBy, this.assignedTo, this.groupId, createdDate, lastModifiedDate);
     }
+    public Task toEntity(Long taskId,LocalDateTime createdDate ) {
+        LocalDateTime lastModifiedDate = LocalDateTime.now();
+        return new Task(taskId, this.taskName, this.description, this.createdBy, this.assignedTo, this.groupId, createdDate, lastModifiedDate);
+    }
 }

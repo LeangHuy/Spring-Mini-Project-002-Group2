@@ -1,5 +1,6 @@
 package com.config.entity.entity;
 
+import com.config.response.ClientResponse;
 import com.config.response.GroupResponse;
 import com.config.response.TaskResponse;
 import com.config.response.UserResponse;
@@ -30,8 +31,8 @@ public class Task {
     private LocalDateTime lastModifiedDate;
 
 
-    public TaskResponse toResponse(UserResponse createdBy, UserResponse assignedTo, GroupResponse group) {
-        return new TaskResponse(this.id, this.taskName, this.description, createdBy, assignedTo, group, this.createdDate, this.lastModifiedDate);
+    public TaskResponse toResponse(ClientResponse clientResponse) {
+        return new TaskResponse(this.id, this.taskName, this.description, clientResponse.getCreatedBy(), clientResponse.getAssignedTo(), clientResponse.getGroup(), this.createdDate, this.lastModifiedDate);
     }
 
 }
