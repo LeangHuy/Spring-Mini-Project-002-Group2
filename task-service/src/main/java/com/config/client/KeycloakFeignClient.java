@@ -16,11 +16,11 @@ import java.util.UUID;
 
 @FeignClient(name = "keycloak-admin-client")
 public interface KeycloakFeignClient {
-    @CircuitBreaker(name = "a", fallbackMethod = "groupFallback")
+    @CircuitBreaker(name = "keycloakAdminClient", fallbackMethod = "groupFallback")
     @GetMapping("/api/v1/groups/{groupId}")
     ResponseEntity<ApiResponse<GroupResponse>> getGroup(@PathVariable UUID groupId);
 
-    @CircuitBreaker(name = "b", fallbackMethod = "userFallback")
+    @CircuitBreaker(name = "keycloakAdminClient", fallbackMethod = "userFallback")
     @GetMapping("/api/v1/users/{userId}")
     ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable String userId);
 
@@ -30,7 +30,7 @@ public interface KeycloakFeignClient {
                 .message("Service Unavailable")
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
                 .statusCode(HttpStatus.SERVICE_UNAVAILABLE.value())
-                .payload(new GroupResponse("uu", "unavailable"))
+                .payload(new GroupResponse("unavailable", "unavailable"))
                 .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.SERVICE_UNAVAILABLE);
@@ -41,7 +41,7 @@ public interface KeycloakFeignClient {
                 .message("Get user by id successfully.")
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
                 .statusCode(HttpStatus.SERVICE_UNAVAILABLE.value())
-                .payload(new UserResponse(null, "unavailable", "unavailable", "unavailable", "unavailable", "unavailable", "unavailable"))
+                .payload(new UserResponse("unavailable", "unavailable", "unavailable", "unavailable", "unavailable", "unavailable", "unavailable"))
                 .timestamp(LocalDateTime.now())
                 .build();
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
